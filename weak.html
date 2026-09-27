@@ -51,14 +51,6 @@
     <tbody id="statsEnglish"></tbody>
   </table>
 
-  <h2>漢文(漢字の読み方)</h2>
-  <table>
-    <thead>
-      <tr><th>原文</th><th>読み方</th><th>解説</th><th>正答率</th></tr>
-    </thead>
-    <tbody id="statsKanji"></tbody>
-  </table>
-
   <button id="resetBtn">リセット</button>
   <button id="backBtn" onclick="location.href='index.html'">＜</button>
 
@@ -101,48 +93,6 @@
             <td>${r.rate}%</td>
           </tr>`
         ).join("");
-    }
-  
-    //漢字用
-    async function loadKanjiStats() {
-
-      const response = await fetch("wordlist_kan.json");
-      const wordList = await response.json();
-
-      const stats = JSON.parse(localStorage.getItem("stats_kanji")) || {};
-      const tbody = document.getElementById("statsKanji");
-
-      let rows = Object.entries(stats).map(([kanji, data]) => {
-
-        const total = data.correct + data.wrong;
-        const rate = total > 0
-          ? (data.correct / total * 100).toFixed(1)
-          : "0.0";
-
-        // JSONから対応する漢字を探す
-        const wordData =
-          wordList.find(item => item.kanji === kanji);
-
-        return {
-          kanji,
-          reading: wordData?.reading || "(読み未登録)",
-          meaning: wordData?.meaning || "",
-          rate: parseFloat(rate)
-        };
-      });
-
-      rows.sort((a, b) => a.rate - b.rate);
-
-      tbody.innerHTML = rows.length === 0
-        ? "<tr><td colspan='4'>データなし</td></tr>"
-        : rows.map(r =>
-            `<tr>
-              <td>${r.kanji}</td>
-              <td>${r.reading}</td>
-              <td>${r.meaning}</td>
-              <td>${r.rate}%</td>
-            </tr>`
-          ).join("");
     }
 
     // リセット処理
